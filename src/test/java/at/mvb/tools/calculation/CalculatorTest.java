@@ -5,8 +5,8 @@ import org.junit.Test;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -52,12 +52,11 @@ public class CalculatorTest {
         LocalDate refDate = getRefDate();
 
         //ACT
-        List<DiffDate> diffDates = Calculator.calculateTimeDifference(testDates, refDate);
+
+        Period actual = Calculator.calculateTimeDifference(testDates, refDate);
 
 
         //ASSERT
-        assertEquals(1, diffDates.size());
-        DiffDate actual = diffDates.get(0);
         assertEquals(26, actual.getYears());
         assertEquals(6, actual.getMonths());
         assertEquals(2, actual.getDays());
@@ -78,8 +77,30 @@ public class CalculatorTest {
 
         //ASSERT
         assertEquals(42, actual.getYears());
-        assertEquals(7, actual.getMonths());
-        assertEquals(30, actual.getDays());
+        assertEquals(8, actual.getMonths());
+        assertEquals(0, actual.getDays());
+    }
+
+    @Test
+    public void testCalcOverallDiff_SixDatesWithMoreMonthThanPerYear_ResultIsCorrect() throws Exception {
+        //ARRANGE
+        ArrayList<LocalDate> testDates = new ArrayList<>();
+        testDates.add(LocalDate.of(1989, 11, 26));
+        testDates.add(LocalDate.of(2016, 5, 26));
+        testDates.add(LocalDate.of(2000, 4, 2));
+        testDates.add(LocalDate.of(2016, 1, 28));
+        testDates.add(LocalDate.of(2016, 1, 28));
+        testDates.add(LocalDate.of(2016, 1, 28));
+
+        LocalDate refDate = getRefDate();
+
+        //ACT
+        DiffDate actual = Calculator.calcOverallDiff(testDates, refDate);
+
+        //ASSERT
+        assertEquals(43, actual.getYears());
+        assertEquals(8, actual.getMonths());
+        assertEquals(0, actual.getDays());
     }
 
     private LocalDate getRefDate() {
